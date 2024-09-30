@@ -13,7 +13,10 @@ from rest_framework.response import Response
 
 
 def index(request):
-    parameters = Parameter.objects.all()
+    count = Parameter.objects.count()
+    parameters = {}
+    for param in Parameter.objects.filter(id__gt=count - 10):
+        parameters[param.id] = param.value
     context = {'parameters': parameters,
                'len': Parameter.objects.count()}
     return render(request, 'main/index.html', context=context)
@@ -24,20 +27,44 @@ class ChartData(APIView):
     permission_classes = []
 
     def get(self, request, format=None):
-        labels = [
-            'January',
-            'February',
-            'March',
-            'April',
-            'May',
-            'June',
-            'July'
-        ]
-        chartlabel = "my data"
-        chartdata = [0, 10, 5, 2, 20, 30, 45]
+        # parameter = Parameter(value=r.randint(0, 10))
+        # parameter.save()
+        parameters = {}
+        count = Parameter.objects.count()
+        labels = []
+        chart_data = []
+        average = 0
+        m = []
+        percent = False
+        error = False
+        param1 = Parameter.objects.get(id=count-1).value
+        param2 = Parameter.objects.get(id=count).value
+        k = count - 9 if count > 10 else 1
+        for i in range(k, count+1):
+            labels.append(str(i))
+            chart_data.append(Parameter.objects.get(id=i).value)
+            average += Parameter.objects.get(id=i).value
+
+        for i in range(len(chart_data)):
+            m.append(average/count)
+
+        if param2 > 10 or param2 < 0:
+            error = True
+
+        elif abs(param2 - param1) > 0.4 * abs(param1):
+            percent = True
+
+        for param in Parameter.objects.filter(id__gt=count-10):
+            parameters[param.id] = param.value
+
+        chart_label = "data"
         data = {
             "labels": labels,
-            "chartlabel": chartlabel,
-            "chartdata": chartdata,
+            "chartlabel": chart_label,
+            "chartdata": chart_data,
+            "average": m,
+            "percent": percent,
+            "error": error,
+            'parameters': parameters,
         }
-        return Response(data)
+        return Response(data=data)
