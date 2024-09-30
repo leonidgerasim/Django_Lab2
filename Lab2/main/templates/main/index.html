@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <title>{{ title }}</title>
+    <style>
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #808080;
+        }
+
+        .card {
+            background-color: #FFFFFF;
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+            transition: 0.3s;
+            border-radius: 5px;
+            padding: 50px 20px;
+        }
+
+<!--        .btn {-->
+<!--            background-color: #FFFFFF;-->
+<!--            color: black;-->
+<!--            padding: 10px 20px;-->
+<!--            border: none;-->
+<!--            text-decoration: none;-->
+<!--            border-radius: 5px;-->
+<!--            cursor: pointer;-->
+<!--            margin: 10px;-->
+<!--            }-->
+
+<!--        button {-->
+<!--            background-color: #FFFFFF;-->
+<!--            color: black;-->
+<!--            padding: 10px 20px;-->
+<!--            border: none;-->
+<!--            text-decoration: none;-->
+<!--            border-radius: 5px;-->
+<!--            cursor: pointer;-->
+<!--            margin: 10px;-->
+<!--        }-->
+<!--        table {-->
+<!--            margin-top: 10px;-->
+<!--            margin-right: 5px;-->
+<!--            width: 100%;-->
+<!--            border-collapse: collapse;-->
+<!--        }-->
+
+<!--        th, td {-->
+<!--            padding: 10px;-->
+<!--            text-align: left;-->
+<!--            border: 1px solid #FFFFFF;-->
+<!--            background-color: #FFFFFF;-->
+<!--        }-->
+
+<!--        input[type=text], textarea {-->
+<!--            background-color: #FFFFFF;-->
+<!--            width: 100%;-->
+<!--            padding: 12px 20px;-->
+<!--            margin: 8px 0;-->
+<!--            display: inline-block;-->
+<!--            border: 1px solid #ccc;-->
+<!--            border-radius: 4px;-->
+<!--            box-sizing: border-box;-->
+<!--        }-->
+
+<!--        select {-->
+<!--            margin: 8px;-->
+<!--            padding: 8px 16px;-->
+<!--        }-->
+<!--        {% block css %}-->
+<!--        {% endblock %}-->
+    </style>
+<!--    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">-->
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body style="background-color: #FFFFFF">
+ <div class="container">
+        <div class="card">
+<!--            <table>-->
+<!--                <tbody>-->
+<!--                {% for p in parameters %}-->
+<!--                <tr>-->
+<!--                    <td>{{p.value}}</td>-->
+<!--                </tr>-->
+<!--                {% endfor %}-->
+<!--                </tbody>-->
+<!--            </table>-->
+            <hr />
+             <div class="row">
+                 <div class="col-md-6">
+                     <canvas id="myChartline"></canvas>
+                 </div>
+<!--                <div class="col-md-6">-->
+<!--                    <canvas id="myChartBar"></canvas>-->
+<!--                </div>-->
+             </div>
+        </div>
+ </div>
+ <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+ <script>
+     $.ajax({
+      method: "GET",
+      url: "{% url 'main:func' %}",
+      success: function(data) {
+        drawLineGraph(data, 'myChartline');
+        console.log("drawing");
+      },
+      error: function(error_data) {
+        console.log(error_data);
+      }
+    })
+
+
+    function drawLineGraph(data, id) {
+      var labels = data.labels;
+      var chartLabel = data.chartlabel;
+      var chartdata = data.chartdata;
+      var ctx = document.getElementById(id).getContext('2d');
+      var chart = new Chart(ctx, {
+        // The type of chart we want to create
+        type: 'line',
+
+        // The data for our dataset
+        data: {
+          labels: labels,
+          datasets: [{
+            label: chartLabel,
+            backgroundColor: 'rgb(255, 100, 200)',
+            borderColor: 'rgb(55, 99, 132)',
+            data: chartdata,
+          }]
+        },
+
+        // Configuration options go here
+        options: {
+          scales: {
+            xAxes: [{
+              display: true
+            }],
+            yAxes: [{
+              ticks: {
+                beginAtZero: true
+              }
+            }]
+          }
+        }
+      });
+    }
+ </script>
+</body>
+</html>
