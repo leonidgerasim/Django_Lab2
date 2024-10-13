@@ -26,8 +26,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 </head>
 <body style="background-color: #FFFFFF">
-<table id="ParameterTable">
-  <hr />
+<hr />
   <div class="row">
     <div class="col-md-6">
       <canvas id="myChartline"></canvas>
@@ -36,7 +35,11 @@
       <canvas id="myChartBar"></canvas>
     </div>
   </div>
-        <thead>
+<div id="parameter_table">
+
+</div>
+<table>
+    <thead>
     <tr>
         <th>ID</th>
         <th>Параметр</th>
@@ -53,26 +56,26 @@
 </table>
  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
  <script>
-     var ajax_call = function(){
-         $.ajax({
-          method: "GET",
-          url: "{% url 'main:func' %}",
-          success: function(data) {
-            drawLineGraph(data, 'myChartline');
-            drawBarGraph(data, 'myChartBar');
-            $('#ParameterTable').html(data.parameters);
-            console.log("drawing");
-            percent(data);
-            error(data);
-          },
-          error: function(error_data) {
-            console.log(error_data);
-          }
-        })
-     }
+<!--     var ajax_call = function(){-->
+        $.ajax({
+            method: "GET",
+            url: "{% url 'main:func' %}",
+            success: function(data) {
+                drawLineGraph(data, 'myChartline');
+                drawBarGraph(data, 'myChartBar');
+                console.log("drawing");
+                percent(data);
+                error(data);
+            },
+            error: function(error_data) {
+                console.log(error_data);
+            }
+            })
+<!--     }-->
 
-    var interval = 5000;
-    setInterval(ajax_call, interval);
+    setTimeout(function(){
+        location = ''
+        }, 5000)
 
     function percent(data) {
         if(data.percent){
@@ -103,7 +106,7 @@
             borderColor: 'rgb(55, 99, 132)',
             data: chartdata,
           },
-          {label: "Avarage",
+          {label: "Среднее",
             borderColor: 'rgb(238, 34, 34)',
             data: average,}]
         },
@@ -125,7 +128,7 @@
     }
      function drawBarGraph(data, id) {
       var labels = data.labels;
-      var chartLabel = data.chartLabel;
+      var chartLabel = data.chartlabel;
       var chartdata = data.chartdata;
       var ctx = document.getElementById(id).getContext('2d');
       var myChart = new Chart(ctx, {

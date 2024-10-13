@@ -18,7 +18,7 @@ def index(request):
     for param in Parameter.objects.filter(id__gt=count - 10):
         parameters[param.id] = param.value
     context = {'parameters': parameters,
-               'len': Parameter.objects.count()}
+               'len': parameters}
     return render(request, 'main/index.html', context=context)
 
 
@@ -54,10 +54,10 @@ class ChartData(APIView):
         elif abs(param2 - param1) > 0.4 * abs(param1):
             percent = True
 
-        for param in Parameter.objects.filter(id__gt=count-10):
+        for param in Parameter.objects.filter(id__gt=count - 10):
             parameters[param.id] = param.value
 
-        chart_label = "data"
+        chart_label = "Данные"
         data = {
             "labels": labels,
             "chartlabel": chart_label,
