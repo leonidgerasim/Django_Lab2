@@ -54,6 +54,13 @@
     {% endfor %}
     </tbody>
 </table>
+<div>
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <button type="submit">Добавить значение</button>
+    </form>
+</div>
  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
  <script>
 <!--     var ajax_call = function(){-->
@@ -73,9 +80,9 @@
             })
 <!--     }-->
 
-    setTimeout(function(){
-        location = ''
-        }, 5000)
+<!--    setTimeout(function(){-->
+<!--        location = ''-->
+<!--        }, 5000)-->
 
     function percent(data) {
         if(data.percent){

@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import Parameter
 import numpy.random as r
 import matplotlib.pyplot as plt
@@ -9,16 +9,26 @@ from django.views.generic import View
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
+from .forms import ParameterForm
+
 # Create your views here.
 
 
 def index(request):
     count = Parameter.objects.count()
     parameters = {}
+    if request.method == 'POST':
+        form = ParameterForm(data=request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('/')
+    else:
+        form = ParameterForm()
     for param in Parameter.objects.filter(id__gt=count - 10):
         parameters[param.id] = param.value
     context = {'parameters': parameters,
-               'len': parameters}
+               'len': parameters,
+               'form': form}
     return render(request, 'main/index.html', context=context)
 
 
